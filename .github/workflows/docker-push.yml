@@ -1,8 +1,4 @@
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "The tag version you want to build"
   push:
     paths:
       - "v2ray.sh"
@@ -47,23 +43,17 @@ jobs:
             echo ::set-output name=tag::${{ github.event.inputs.tag }}
           fi
 
-      - name: Determine whether to push to DockerHub
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "PUSH=true" >> $GITHUB_ENV
-
       - name: Prepare environment variables
         id: prepare
         run: |
           echo ::set-output name=docker_platforms::linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           echo ::set-output name=docker_image::yindaheng98/docker-caddy2-v2ray
           echo ::set-output name=docker_tag::${{ steps.tag.outputs.tag }}
-          echo ::set-output name=docker_is_push::${PUSH:-false}
 
       - name: Build tag & latest release
         run: |
           docker buildx build --platform ${{ steps.prepare.outputs.docker_platforms }} \
-          --output "type=image,push=${{ steps.prepare.outputs.docker_is_push }}" \
+          --output "type=image,push=true" \
           --tag "${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.docker_tag }}" \
           --tag "${{ steps.prepare.outputs.docker_image }}:latest" \
           --build-arg TAG=${{ steps.prepare.outputs.docker_tag }} \

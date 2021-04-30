@@ -11,8 +11,8 @@ RUN set -ex \
 	&& mkdir -p /etc/v2ray /usr/local/share/v2ray /var/log/v2ray \
 	&& chmod +x /root/v2ray.sh \
 	&& /root/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
-	
+
 COPY supervisord.conf /root/supervisord.conf
 
 VOLUME /etc/v2ray
-CMD [ "supervisord", "-c", "/root/supervisord.conf", "-e", "debug" ]
+CMD [ "supervisord", "-c", "/root/supervisord.conf"]

@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} alpine:latest
+FROM --platform=${TARGETPLATFORM} caddy:alpine
 LABEL maintainer "V2Fly Community <dev@v2fly.org>"
 
 WORKDIR /root

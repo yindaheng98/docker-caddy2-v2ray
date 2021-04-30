@@ -5,6 +5,7 @@ WORKDIR /root
 ARG TARGETPLATFORM
 ARG TAG
 COPY v2ray.sh /root/v2ray.sh
+COPY supervisord.conf /root/supervisord.conf
 
 RUN set -ex \
 	&& apk add --no-cache tzdata openssl ca-certificates supervisor \
@@ -13,4 +14,4 @@ RUN set -ex \
 	&& /root/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
 
 VOLUME /etc/v2ray
-CMD [ "/usr/bin/v2ray", "-config", "/etc/v2ray/config.json" ]
+CMD [ "supervisord", "-c", "/root/supervisord.conf", "-e", "debug" ]
